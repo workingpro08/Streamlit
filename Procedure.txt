@@ -1,0 +1,88 @@
+Speech-to-Text Transcription App Documentation
+=============================================
+
+This application converts spoken audio (from files or microphone) into text with timestamps using OpenAI's Whisper model.
+
+Core Components
+---------------
+1. Audio Input Handling
+   - Accepts MP3/WAV files (via upload)
+   - Supports real-time microphone input (local execution only)
+
+2. Audio Processing
+   - Uses librosa to load and resample audio to 16kHz (Whisper's required format)
+   - Applies noise reduction (noisereduce) for clearer transcription
+
+3. Speech Recognition
+   - Powered by Whisper (OpenAI's ASR model)
+   - Generates text + word-level timestamps
+
+4. Web Interface
+   - Built with Streamlit for easy file upload and transcription
+
+Workflow
+--------
+
+File-Based Transcription:
+1. User Uploads Audio
+   - Drag & drop an MP3/WAV file into the Streamlit app
+
+2. Audio Preprocessing
+   - librosa.load() reads the file and resamples it to 16kHz
+   - Optional: noisereduce cleans background noise
+
+3. Speech-to-Text Conversion
+   - Whisper processes the audio and returns:
+     * Transcribed text
+     * Timestamps for each segment (start/end times)
+
+4. Output Display
+   - The app shows:
+     * Playable audio (for verification)
+     * Formatted transcription with timestamps
+
+Real-Time Microphone Transcription:
+(Runs locally, not on Streamlit Cloud due to mic access restrictions)
+
+1. Microphone Activation
+   - The script captures live audio using sounddevice
+
+2. Audio Chunk Processing
+   - Each 1-3 sec chunk is sent to Whisper
+
+3. Continuous Output
+   - Transcripts appear in real-time in the console
+
+Technical Details
+----------------
+Key Functions:
+- librosa.load(): Reads audio files & resamples to 16kHz
+- noisereduce.reduce_noise(): Removes background noise
+- whisper.transcribe(): Converts speech → text + timestamps
+- sounddevice.InputStream(): Captures live microphone input
+
+Why Librosa?
+- Handles MP3/WAV/OGG seamlessly
+- Automatic resampling (critical for Whisper)
+- More reliable than pydub for edge-case files
+
+Why Noise Reduction?
+- Improves accuracy in noisy recordings
+- Uses spectral gating (noisereduce) to filter out static
+
+Example Output:
+[0.00s - 4.00s]  Hi, this voice is used for testing purpose.
+
+Key Features
+-----------
+✓ Accurate transcription (Whisper AI)
+✓ Timestamps for each speech segment
+✓ Noise reduction for noisy recordings
+✓ Web interface (Streamlit) + Real-time mic input
+✓ Handles MP3/WAV seamlessly (via Librosa)
+
+Use Cases:
+- Meeting notes automation
+- Podcast transcription
+- Voice memo conversion
+- Accessibility tools
